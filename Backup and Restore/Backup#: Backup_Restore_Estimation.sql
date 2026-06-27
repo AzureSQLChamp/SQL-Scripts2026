@@ -1,14 +1,32 @@
---TSQL Script to get Backup & Restore % completion & estimated time complete
-SELECT command,
-            s.text,
-            percent_complete, 
-            CAST(((DATEDIFF(s,start_time,GetDate()))/3600) as varchar) + ' hour(s), '
-                  + CAST((DATEDIFF(s,start_time,GetDate())%3600)/60 as varchar) + 'min, '
-                  + CAST((DATEDIFF(s,start_time,GetDate())%60) as varchar) + ' sec' as running_time,
-            CAST((estimated_completion_time/3600000) as varchar) + ' hour(s), '
-                  + CAST((estimated_completion_time %3600000)/60000 as varchar) + 'min, '
-                  + CAST((estimated_completion_time %60000)/1000 as varchar) + ' sec' as est_time_to_go,
-            dateadd(second,estimated_completion_time/1000, getdate()) as est_completion_time 
+/*
+Original link: http://www.sqlservercentral.com/blogs/the-sql-professor/2017/01/26/backuprestorewhats-my-status/
+*/
+
+--By checking only for the restore and backup command lines you will be able to quickly identify your session id
+--and get an  approximate ETA and percentage complete. you can tinker of course with the estimations
+--if you’d like or pull back more fields. This is just a simple technique in utilizing a helpful DMV to provide info quickly.
+SELECT  r.session_id
+      , r.command
+      , r.start_time
+      , r.status
+      , CONVERT(NUMERIC(6, 2), r.percent_complete) AS [Percent Complete]
+      , CONVERT(VARCHAR(20), DATEADD(ms, r.estimated_completion_time , GETDATE()), 20) AS [ETA Completion Time]
+      , CONVERT(NUMERIC(10, 2), r.total_elapsed_time / 1000.0 / 60.0) AS [Elapsed Min]
+      , CONVERT(NUMERIC(10, 2), r.total_elapsed_time / 1000.0 / 60.0 / 60.0) AS [Elapsed Hours]
+      , CONVERT(NUMERIC(10, 2), r.estimated_completion_time / 1000.0 / 60.0) AS [ETA Min]
+      , CONVERT(NUMERIC(10, 2), r.estimated_completion_time / 1000.0 / 60.0/ 60.0) AS [ETA Hours]
+      , CONVERT(VARCHAR(1000), (
+                 SELECT SUBSTRING(TEXT, r.statement_start_offset / 2, CASE
+                             WHEN r.statement_end_offset = -1
+                                 THEN 1000
+                             ELSE (r.statement_end_offset - r.statement_start_offset) / 2
+                             END)
+                 FROM   sys.dm_exec_sql_text(sql_handle)
+                 )) AS TSQLStatement
 FROM sys.dm_exec_requests r
-CROSS APPLY sys.dm_exec_sql_text(r.sql_handle) s
-WHERE r.command in ('RESTORE DATABASE', 'BACKUP DATABASE', 'RESTORE LOG', 'BACKUP LOG')
+WHERE command IN (
+        'RESTORE DATABASE'
+        , 'BACKUP DATABASE'
+        ,'RESTORE LOG'
+        ,'BACKUP LOG'
+        );
