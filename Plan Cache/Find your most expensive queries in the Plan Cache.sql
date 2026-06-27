@@ -1,7 +1,5 @@
 -- Find your most expensive queries in the Plan Cache
--- Part of the SQL Server DBA Toolbox at https://github.com/DavidSchanzer/Sql-Server-DBA-Toolbox
 -- This script lists the top 100 statements from the Plan Cache in descending order of computed Gross Cost (SubTreeCost * UseCounts).
--- From http://sqlmag.com/blog/performance-tip-find-your-most-expensive-queries
 
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
 
