@@ -1,0 +1,50 @@
+
+--Remove all schemas, roles and users from a database:
+set nocount on
+ 
+select 'use [' + DB_NAME() + '] '
+union all
+select 'go'
+ 
+union all
+ 
+-- Remove all users from all roles
+select distinct 'exec dbo.sp_droprolemember @rolename=N''' +
+       dp.name +
+       ''', @membername=N''' +
+       dpmember.name + '''' + 
+       char(10) + 'go' 
+from sys.database_principals as dp
+       inner join sys.database_role_members as drm on dp.[principal_id] = drm.[role_principal_id] 
+       inner join sys.database_principals  as dpmember on drm.[member_principal_id] = dpmember.[principal_id]
+where dpmember.[name] not like 'dbo'
+ 
+union all
+ 
+-- Drop all schemas named as non-builtin users
+select distinct 'drop schema [' + s.name + '] '+
+       char(10) + 'go' 
+from sys.schemas s inner join sys.database_principals dp on dp.name = s.name
+where s.name NOT IN ('dbo', 'guest', 'information_schema','sys','db_owner','db_accessadmin','db_securityadmin','db_ddladmin','db_backupoperator','db_datareader','db_datawriter','db_denydatareader','db_denydatawriter')
+ 
+union all
+ 
+-- Drop all users (except builtin)
+select distinct 'drop user [' +
+       dp.name + '] ' +
+       char(10) + 'go' 
+from sys.database_principals as dp
+where dp.[type] in ('u','g','s')
+       and dp.name not in ('dbo','guest','information_schema','sys')
+ 
+union all
+ 
+-- Drop all roles
+select distinct 'drop role [' +
+       dp.name + '] ' +
+       char(10) + 'go' 
+from sys.database_principals as dp
+where dp.name not in ('public','db_owner','db_accessadmin','db_securityadmin','db_ddladmin','db_backupoperator','db_datareader','db_datawriter','db_denydatareader','db_denydatawriter')
+       and dp.type = 'r'
+ 
+set nocount off
