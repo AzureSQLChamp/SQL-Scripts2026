@@ -1,4 +1,5 @@
 👋 Welcome
+
 Welcome to SQL-Scripts2026, a practical collection of SQL Server scripts maintained by AzureSQLChamp. This repository is intended to help database professionals perform common DBA tasks, investigate
 production issues, monitor SQL Server environments, and deepen their understanding of SQL Server internals.
 Whether you are learning SQL Server administration or supporting production systems, use these scripts as starting points for hands-on practice and carefully tested operational workflows.
@@ -6,29 +7,21 @@ Important: Scripts are provided for learning and adaptation.
 Always review and test them in a non-production environment before
 running them against business-critical systems.
 
-🎯 What you'll find here
-- Administration: useful database and instance-level checks.
-- Backup and restore: backup operations and recovery-related
-  scripts.
-- Always On and HA/DR: Availability Group checks and
-  troubleshooting helpers.
-- Performance tuning: CPU, query, plan-cache, and performance
-  investigation scripts.
-- Monitoring: database-level monitoring, growth checks, and
-  operational diagnostics.
-- TempDB and parallelism: scripts for investigating TempDB
-  behavior and parallel query execution.
-- Query Store and Extended Events: tools to support query analysis
-  and troubleshooting.
-- Security: selected login and security administration utilities.
-- Error-log analysis: scripts for reading and reviewing SQL Server
-  error-log information.
+**🎯 What you'll find here**
+**- Administration:** useful database and instance-level checks.
+**- Backup and restore:** backup operations and recovery-related scripts.
+**- Always On and HA/DR:** Availability Group checks and  troubleshooting helpers.
+**- Performance tuning:** CPU, query, plan-cache, and performance investigation scripts.
+**- Monitoring:** database-level monitoring, growth checks, and operational diagnostics.
+**- TempDB and parallelism:** scripts for investigating TempDB  behavior and parallel query execution.
+**- Query Store and Extended Events:** tools to support query analysis and troubleshooting.
+**- Security:** selected login and security administration utilities.
+**- Error-log analysis:** scripts for reading and reviewing SQL Server error-log information.
 
-📂 Repository guide
+**📂 Repository guide**
 Browse the folders in the repository to find scripts by task.
   Folder                              Purpose
-  AlwaysON-Scripts                  Availability Groups and
-                                      high-availability diagnostics
+  AlwaysON-Scripts                  Availability Groups and high-availability diagnostics
   Backup and Restore                Backup and restore operations
   CPU-Scripts                       CPU and scheduler-related
                                       investigations
@@ -57,7 +50,7 @@ Browse the folders in the repository to find scripts by task.
                                   investigation
 Folder contents may evolve as new scripts are added.
 🚀 Getting started
-1. Open the SQL-Scripts2026
+**1. Open the SQL-Scripts2026**
    repository.
 2. Browse the folder that matches the task you want to perform.
 3. Open a .sql file and read its comments and prerequisites.
